@@ -64,13 +64,15 @@ async function selectUserAccount(connection, id) {
   const selectUserAccountQuery = `
         SELECT status, id, userId, nickname
         FROM User 
-        WHERE id = ?;`;
+        WHERE id = ?;
+        `;
   const selectUserAccountRow = await connection.query(
       selectUserAccountQuery,
       id
   );
   return selectUserAccountRow[0];
 }
+
 
 //유저 분야(+키워드) 선택
 async function field(connection,userId,fieldId) {
@@ -139,6 +141,20 @@ async function mypage(connection,userId) {
   return Row[0];
 }
 
+// 존재하는 유저인지, status=1인지
+async function existUserAccount(connection, userId) {
+  const Query = `
+    select *
+    from User
+    where userId=? and status=1;
+        `;
+  const Row = await connection.query(
+      Query,
+      userId
+  );
+  return Row[0];
+}
+
 
 
 
@@ -156,4 +172,5 @@ module.exports = {
   fieldin,
   namePatch,
   mypage,
+  existUserAccount,
 };
