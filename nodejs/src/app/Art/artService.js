@@ -57,6 +57,7 @@ exports.saveImg = async function (userId,artId) {
             connection.release();
             return response(baseResponse.SUCCESS,{'artId':artwork[0].artId});
         } else{
+            connection.release();
             return errResponse(baseResponse.DELETED_ARTWORK);
         }
 
@@ -81,10 +82,38 @@ exports.postStorage = async function (userId,title,caption,share,myimgId) {
         for(let i=0; i<myimgId.length; i++){
             const selectImg = await artDao.selectImg(connection,findstorageId[0].storageId,myimgId[i]);
         }
+        connection.release();
         return response(baseResponse.SUCCESS,{'created':title});
 
     } catch (err) {
         logger.error(`App - postStorage Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}
+
+//작품 다중삭제
+exports.delArt = async function (userId,artId) {//artId는 배열 //밸리데이션: OK!
+    try {
+        //밸리데이션:존재하는작품이며 status=1인지
+        //트랜잭션 적용하기
+        const connection = await pool.getConnection(async (conn) => conn);
+
+        for(let i=0; i<artId.length; i++){
+            const artwork = await artDao.artwork(connection,artId[i]);//artwork 존재, status=1확인
+            if(artwork.length > 0){
+                const delArt = await artDao.delArt(connection,userId,artId[i]);
+            }
+            else{
+                connection.release();
+                return errResponse(baseResponse.DELETED_ARTWORK);
+            }
+        }
+
+        connection.release();
+        return response(baseResponse.SUCCESS);
+
+    } catch (err) {
+        logger.error(`App - delArt Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
     }
 }

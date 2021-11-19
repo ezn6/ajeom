@@ -106,3 +106,23 @@ exports.look = async function (req, res) {
     return res.send(look);
 
 };
+
+//작품 삭제(다중삭제)
+exports.delArt = async function (req, res) {//밸리데이션 OK!
+
+    const userIdFromJWT = req.verifiedToken.userId
+    const userId = req.params.userId;
+    const {artId} = req.body;//artId 배열
+
+    if (!userId)
+        return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
+    if (userIdFromJWT != userId)
+        return res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    if (!artId)
+        return res.send(errResponse(baseResponse.ARTID_EMPTY));
+
+    const delArt = await artService.delArt(
+        userId,artId);
+    return res.send(delArt);
+
+};

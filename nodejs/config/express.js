@@ -38,6 +38,7 @@ module.exports = function () {
     require('../src/app/User/userRoute')(app);
     require('../src/app/Product/productRoute')(app);
     require('../src/app/Art/artRoute')(app);
+    require('../src/app/Subscribe/subRoute')(app);
 
     return app;
 };

@@ -28,12 +28,12 @@ async function getArtByField(connection,fieldId) {
     return getHomeRow[0];
 }
 
-//최고 아티스트 (눈도장좋아요 100개초과시) limit 6
+//최고 아티스트 (구독 1명 이상부터) limit 6 // 기준 나중에 바꾸기
 async function bestArtist(connection,userId) {
     const bestArtistQuery = `
-        select nickname,profile
+        select nickname, profile, (select count(*) from Subscribe where User.userId=artistId) as subCount
         from User
-        where likes>100
+        where (select count(*) from Subscribe where User.userId=artistId)>=1
         order by rand() limit 6;
         `;
     const getHomeRow = await connection.query(
@@ -43,12 +43,12 @@ async function bestArtist(connection,userId) {
     return getHomeRow[0];
 }
 
-//새로운 아티스트 (일주일이내) limit 6
+//새로운 아티스트 (일주일이내) limit 6, grade 1~6사이만
 async function newArtist(connection,userId) {
     const newArtistQuery = `
         select nickname,profile
         from User
-        where createdAt > DATE_ADD(now(), INTERVAL -7 DAY)
+        where grade<7 and createdAt > DATE_ADD(now(), INTERVAL -7 DAY)
         order by rand() limit 6;
         `;
     const getHomeRow = await connection.query(
@@ -226,6 +226,18 @@ async function increase(connection, userId) {
     return Row[0];
 }
 
+//내 작품 삭제하기
+async function delArt(connection, userId,artId) {
+    const Query = `
+        UPDATE ajeom.Artwork t SET t.status = 2 WHERE t.userId = ? and t.artId = ?;
+        `;
+    const Row = await connection.query(
+        Query,
+        [userId,artId]
+    );
+    return Row[0];
+}
+
 module.exports = {
     getHome,
     getArtByField,
@@ -239,5 +251,6 @@ module.exports = {
     postStorage,
     findstorageId,
     selectImg,
-    topLook,bestHeart,latest,increase
+    topLook,bestHeart,latest,increase,
+    delArt,
 };

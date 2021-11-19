@@ -32,6 +32,9 @@ module.exports = function(app){
     //작품 올리기
     //app.post('/app/users/:userId/posts',jwtMiddleware, art.postArt);
 
+    //작품 삭제(다중삭제)
+    app.patch('/app/users/:userId/posts',jwtMiddleware, art.delArt);
+
     //보관함생성
     app.post('/app/users/:userId/storage',jwtMiddleware, art.postStorage);
 
