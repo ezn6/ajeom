@@ -32,7 +32,7 @@ module.exports = function(app){
     app.get('/app/auto-login', jwtMiddleware, user.check);
 
     //마이페이지
-    //app.get('/app/users/:userId/mypage', jwtMiddleware, user.mypage);
+    app.get('/app/users/:userId/mypage', jwtMiddleware, user.mypage);
 
     //특정 유저 조회 API
     //app.get('/app/users/:userId', user.getUserById);

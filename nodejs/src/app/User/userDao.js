@@ -127,8 +127,8 @@ async function namePatch(connection,nickname,userId) {
 async function mypage(connection,userId) {
   const Query = `
     select nickname,profile,grade,
-           (select count(*) from Storage s where s.userId = u.userId) as scount,
-           (select count(*) from Likes l where l.userId = u.userId) as lcount
+           (select count(*) from Myimg m where m.userId = u.userId) as imgCount,
+           (select count(*) from Subscribe s where s.userId = u.userId) as subCount
     from User u
     where u.userId=?;
         `;
