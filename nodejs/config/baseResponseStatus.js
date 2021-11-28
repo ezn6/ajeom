@@ -39,11 +39,13 @@ module.exports = {
     USER_ROAD_EMPTY : { "isSuccess": false, "code": 2022, "message": "도로명 주소를 입력해 주세요" },
     USER_DETAIL_EMPTY : { "isSuccess": false, "code": 2023, "message": "상세 주소를 입력해 주세요" },
     ARTID_EMPTY : { "isSuccess": false, "code": 2024, "message": "art Id를 입력해주세요" },
-    COUNT_EMPTY : { "isSuccess": false, "code": 2025, "message": "수량을 입력해주세요" },
-    CART_EMPTY : { "isSuccess": false, "code": 2026, "message": "cart Id를 입력해주세요" },
+    ARTIST_EMPTY : { "isSuccess": false, "code": 2025, "message": "artist id를 입력해주세요." },
+    NICKNAME_LENGTH : { "isSuccess": false, "code": 2026, "message": "닉네임은 20자리 미만으로 입력해주세요" },
     CATEGORY_EMPTY : { "isSuccess": false, "code": 2027, "message": "category Id를 입력해주세요" },
     ACCESSTOKEN_EMPTY : { "isSuccess": false, "code": 2028, "message":"access 토큰을 입력해주세요." },
-    SUBSCRIBE_WARN : { "isSuccess": false, "code": 2029, "message":"자기자신을 구독할수 없습니다." },
+    SUBSCRIBE_WARN : { "isSuccess": false, "code": 2029, "message":"자기자신을 구독(취소)할수 없습니다." },
+    REVIEW_LENGTH : { "isSuccess": false, "code": 2030, "message":"후기는 100자리 미만으로 입력해주세요." },
+    STORAGEID_EMPTY : { "isSuccess": false, "code": 2031, "message":"storageId를 입력해주세요." },
 
     // Response error
     SIGNUP_REDUNDANT_EMAIL : { "isSuccess": false, "code": 3001, "message":"중복된 이메일입니다." },
@@ -58,6 +60,8 @@ module.exports = {
     SIGNUP_REDUNDANT_ID : { "isSuccess": false, "code": 3007, "message":"중복된 id입니다." },
     DELETED_ARTWORK : { "isSuccess": false, "code": 3008, "message":"존재하지 않거나 삭제된 작품입니다." },
     SUBSCRIBE_ERROR : { "isSuccess": false, "code": 3009, "message":"이미 구독한 작가입니다." },
+    USER_ERROR : { "isSuccess": false, "code": 3010, "message":"존재하지 않거나 탈퇴한 회원입니다." },
+    NOT_SUBSCRIBE : { "isSuccess": false, "code": 3011, "message":"구독을 하지 않은 작가입니다." },
 
     //Connection, Transaction 등의 서버 오류
     DB_ERROR : { "isSuccess": false, "code": 4000, "message": "데이터 베이스 에러"},

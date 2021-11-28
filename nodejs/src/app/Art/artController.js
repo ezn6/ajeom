@@ -23,7 +23,8 @@ exports.getHome = async function (req, res) {
     else{
         const getHome = await artProvider.getHome(
             userId);
-        return res.send(getHome);
+        //return res.send(getHome);
+        return res.send(response(baseResponse.SUCCESS, getHome));
     }
 };
 
@@ -99,11 +100,10 @@ exports.look = async function (req, res) {
         return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
     if (userIdFromJWT != userId)
         return res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
-    //밸리데이션
 
     const look = await artProvider.look(
         userId);
-    return res.send(look);
+    return res.send(response(baseResponse.SUCCESS, look));
 
 };
 
@@ -124,5 +124,79 @@ exports.delArt = async function (req, res) {//밸리데이션 OK!
     const delArt = await artService.delArt(
         userId,artId);
     return res.send(delArt);
+
+};
+
+//보관함 탭
+exports.storage = async function (req, res) {//밸리데이션:ok
+
+    const userIdFromJWT = req.verifiedToken.userId
+    const userId = req.params.userId;
+
+    if (!userId)
+        return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
+    if (userIdFromJWT != userId)
+        return res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+
+    const storage = await artProvider.storage(
+        userId);
+    return res.send(response(baseResponse.SUCCESS, storage));
+
+};
+
+//옅보기탭>베스트보관함 lookRecent
+exports.lookBest = async function (req, res) {//밸리데이션:ok
+
+    const userIdFromJWT = req.verifiedToken.userId
+    const userId = req.params.userId;
+    const cursor = req.query.cursor;//쿼리스트링-페이징
+
+    if (!userId)
+        return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
+    if (userIdFromJWT != userId)
+        return res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+
+    const lookBest = await artProvider.lookBest(
+        userId,cursor);
+    return res.send(response(baseResponse.SUCCESS, lookBest));
+
+};
+
+//옅보기탭>최근보관함 lookRecent
+exports.lookRecent = async function (req, res) {//밸리데이션:ok
+
+    const userIdFromJWT = req.verifiedToken.userId
+    const userId = req.params.userId;
+    const cursor = req.query.cursor;//쿼리스트링-페이징
+
+    if (!userId)
+        return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
+    if (userIdFromJWT != userId)
+        return res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+
+    const lookRecent = await artProvider.lookRecent(
+        userId,cursor);
+    return res.send(response(baseResponse.SUCCESS, lookRecent));
+
+};
+
+//보관함 상세
+exports.storageDetail = async function (req, res) {//밸리데이션:ok
+
+    const userIdFromJWT = req.verifiedToken.userId
+    const userId = req.params.userId;
+    const cursor = req.query.cursor;//쿼리스트링-페이징
+    const storageId = req.params.storageId;
+
+    if (!userId)
+        return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
+    if (userIdFromJWT != userId)
+        return res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    if (!storageId)
+        return res.send(errResponse(baseResponse.STORAGEID_EMPTY));
+
+    const storageDetail = await artProvider.storageDetail(
+        userId,cursor,storageId);
+    return res.send(response(baseResponse.SUCCESS, storageDetail));
 
 };
