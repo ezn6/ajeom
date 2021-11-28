@@ -1,36 +1,3 @@
-// // 모든 유저 조회
-// async function selectUser(connection) {
-//   const selectUserListQuery = `
-//                 SELECT email, nickname
-//                 FROM UserInfo;
-//                 `;
-//   const [userRows] = await connection.query(selectUserListQuery);
-//   return userRows;
-// }
-//
-// // 이메일로 회원 조회
-// async function selectUserEmail(connection, email) {
-//   const selectUserEmailQuery = `
-//                 SELECT email,id
-//                 FROM User
-//                 WHERE email = ?;
-//                 `;
-//   const [emailRows] = await connection.query(selectUserEmailQuery, email);
-//   return emailRows;
-// }
-//
-// // userId 회원 조회
-// async function selectUserId(connection, userId) {
-//   const selectUserIdQuery = `
-//                  SELECT id, email,name
-//                  FROM User
-//                  WHERE userId = ?;
-//                  `;
-//   const [userRow] = await connection.query(selectUserIdQuery, userId);
-//   //console.log(`data: ${JSON.stringify([userRow])}`)
-//   return userRow;
-// }
-
 // 유저 생성
 async function insertUserInfo(connection, insertUserInfoParams) {
   const insertUserInfoQuery = `
@@ -128,11 +95,11 @@ async function namePatch(connection,nickname,userId) {
 //마이페이지
 async function mypage(connection,userId) {
   const Query = `
-    select nickname,profile,grade,
-           (select count(*) from Myimg m where m.userId = u.userId) as imgCount,
-           (select count(*) from Subscribe s where s.userId = u.userId) as subCount
+    select nickname,profile,grade,gName,
+           (select count(*) from Myimg m where m.userId = u.userId) as icount,
+           (select count(*) from Subscribe s where s.userId = u.userId and s.status=1) as scount
     from User u
-    where u.userId=?;
+    where u.userId=? and u.status=1;
         `;
   const Row = await connection.query(
       Query,
@@ -155,15 +122,36 @@ async function existUserAccount(connection, userId) {
   return Row[0];
 }
 
+//프로필 수정
+async function profilePatch(connection,profile,userId) {
+  const Query = `
+    UPDATE User t SET t.profile = ? WHERE t.userId = ?;
+        `;
+  const Row = await connection.query(
+      Query,
+      [profile,userId]
+  );
+  return Row[0];
+}
 
+// 존재하는 닉네임인지( 닉네임 중복제거)
+async function findName(connection, nickname) {
+  const Query = `
+    select *
+    from User
+    where nickname=? and status=1;
+        `;
+  const Row = await connection.query(
+      Query,
+      nickname
+  );
+  return Row[0];
+}
 
 
 
 
 module.exports = {
-  // selectUser,
-  // selectUserEmail,
-  // selectUserId,
   insertUserInfo,
   selectUserPassword,
   selectUserAccount,
@@ -173,4 +161,6 @@ module.exports = {
   namePatch,
   mypage,
   existUserAccount,
+  profilePatch,
+  findName,
 };

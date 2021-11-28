@@ -7,8 +7,8 @@ module.exports = function(app){
     const qs = require('qs');
     const fetch = require('node-fetch-npm');
 
-    // 0. 테스트 API
-    app.get('/app/test', user.getTest)
+    // 테스트 API
+    //app.get('/app/test', user.getTest)
 
     //유저 생성 (회원가입) API + 로그인  //TODO:자동로그인
     app.post('/app/users/:corporation',user.postUsers);
@@ -34,15 +34,15 @@ module.exports = function(app){
     //마이페이지
     app.get('/app/users/:userId/mypage', jwtMiddleware, user.mypage);
 
+    //프로필 수정
+    app.patch('/app/users/:userId/mypage/profile',jwtMiddleware, user.profilePatch);
+
     //특정 유저 조회 API
     //app.get('/app/users/:userId', user.getUserById);
 
     // TODO: After 로그인 인증 방법 (JWT)
     // 로그인 하기 API (JWT 생성)
     //app.post('/app/login', user.login);
-
-    // 회원 정보 수정 API (JWT 검증 및 Validation - 메소드 체이닝 방식으로 jwtMiddleware 사용)
-    //app.patch('/app/users/:userId', jwtMiddleware, user.patchUsers);
 
 
 

@@ -132,18 +132,21 @@ exports.check = async function (req, res) {
 };
 
 //닉네임 수정
-exports.namePatch = async function (req, res) {
+exports.namePatch = async function (req, res) {//밸리:OK
 
     const userIdFromJWT = req.verifiedToken.userId
     const userId = req.params.userId;
     const {nickname} = req.body;
 
-    //밸리데이션:글자수제한
-
+    //밸리데이션:글자수제한,중복제거
     if (!userId)
         return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
     if (userIdFromJWT != userId)
         return res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    if (!nickname)
+        return res.send(errResponse(baseResponse.USER_NICKNAME_EMPTY));
+    if (nickname.length > 20)
+        return res.send(errResponse(baseResponse.NICKNAME_LENGTH));
 
     const namePatch = await userService.namePatch(userId, nickname);
     return res.send(namePatch);
@@ -162,7 +165,24 @@ exports.mypage = async function (req, res) {
         return res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
 
     const mypage = await userProvider.mypage(userId);
-    return res.send(mypage);
+    //return res.send(mypage);
+    return res.send(response(baseResponse.SUCCESS, mypage));
+};
+
+//프로필 수정
+exports.profilePatch = async function (req, res) {
+
+    const userIdFromJWT = req.verifiedToken.userId
+    const userId = req.params.userId;
+    const {profile} = req.body;
+
+    if (!userId)
+        return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
+    if (userIdFromJWT != userId)
+        return res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+
+    const profilePatch = await userService.profilePatch(userId,profile);
+    return res.send(profilePatch);
 
 };
 

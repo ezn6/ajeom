@@ -1,7 +1,14 @@
-const { pool } = require("../../../config/database");
-const { logger } = require("../../../config/winston");
-
 const userDao = require("./userDao");
+const {logger} = require("../../../config/winston");
+const {pool} = require("../../../config/database");
+const secret_config = require("../../../config/secret");
+const baseResponse = require("../../../config/baseResponseStatus");
+const {response} = require("../../../config/response");
+const {errResponse} = require("../../../config/response");
+const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
+const {connect} = require("http2");
+
 
 // Provider: Read 비즈니스 로직 처리
 
@@ -52,10 +59,16 @@ exports.accountCheck = async function (id) {
 };
 
 //마이페이지
-exports.mypage = async function (userId) {
+exports.mypage = async function (userId) {//밸리:완성,쿼리로 구독상태status=1도확인
   const connection = await pool.getConnection(async (conn) => conn);
-  const mypage = await userDao.mypage(connection, userId);
-  connection.release();
-
-  return mypage;
+  //밸리데이션:사용자가 존재하는 회원인지(status=1)
+  const isUser = await userDao.existUserAccount(connection,userId);
+  if(isUser.length < 1)
+    return errResponse(baseResponse.USER_ERROR);//존재하지 않거나 탈퇴회원
+  else{
+    const mypage = await userDao.mypage(connection, userId);
+    connection.release();
+    return mypage;
+    //return response(baseResponse.SUCCESS,mypage);
+  }
 };

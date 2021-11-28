@@ -117,9 +117,9 @@ exports.field = async function (userId,fieldId) {
         const connection = await pool.getConnection(async (conn) => conn);
 
         for(let i=0; i<fieldId.length; i++){
-
-                console.log(`fieldId분야 : ${fieldId[i]}`);
-                const fieldResult = await userDao.field(connection,userId,fieldId[i]);
+            console.log(`fieldId분야 : ${fieldId[i]}`);
+            //밸리데이션:이미 선택된거면 넘어가도록(혹시나 로그인오류로 인한)
+            const fieldResult = await userDao.field(connection,userId,fieldId[i]);
 
         }
         connection.release();
@@ -158,7 +158,7 @@ exports.fieldPatch = async function (userId, infield, outfield) {
         for(let i=0; i<outfield.length; i++){//분야 삭제
             const fieldout = await userDao.fieldout(connection,userId,outfield[i]);
         }
-        //분아 추가 전에 밸리대이션 넣기(이미 있는 분야인지)
+        //분아 추가 전에 밸리데이션 넣기(이미 있는 분야인지)
         for(let i=0; i<infield.length; i++){//분야 추가
             const fieldin = await userDao.fieldin(connection,userId,infield[i]);
         }
@@ -172,7 +172,7 @@ exports.fieldPatch = async function (userId, infield, outfield) {
 }
 
 //유저 키워드 수정
-exports.kwPatch = async function (userId, inkw, outkw) {
+exports.kwPatch = async function (userId, inkw, outkw) {//밸리:
     try {
         const connection = await pool.getConnection(async (conn) => conn);
 
@@ -193,17 +193,42 @@ exports.kwPatch = async function (userId, inkw, outkw) {
 }
 
 //닉네임 수정
-exports.namePatch = async function (userId, nickname) {
+exports.namePatch = async function (userId, nickname) {//밸리:ok
     try {
         const connection = await pool.getConnection(async (conn) => conn);
-        //console.log(userId, nickname);
-        const namePatch = await userDao.namePatch(connection,nickname,userId);
-
-        connection.release();
-        //console.log(namePatch);
-        return response(baseResponse.SUCCESS);
+        const isUser = await userDao.existUserAccount(connection,userId);
+        if(isUser.length < 1)
+            return errResponse(baseResponse.USER_ERROR);//존재하지 않거나 탈퇴회원
+        else{
+            //닉네임 중복제거
+            const findName = await userDao.findName(connection,nickname);
+            if (findName.length > 0)
+                return errResponse(baseResponse.SIGNUP_REDUNDANT_NICKNAME);
+            const namePatch = await userDao.namePatch(connection,nickname,userId);
+            connection.release();
+            return response(baseResponse.SUCCESS);
+        }
     } catch (err) {
         logger.error(`App - namePatch Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}
+
+//프로필 수정
+exports.profilePatch = async function (userId, profile) {//밸리:ok
+    try {
+        const connection = await pool.getConnection(async (conn) => conn);
+        //밸리데이션:사용자가 존재하는 회원인지(status=1)
+        const isUser = await userDao.existUserAccount(connection,userId);
+        if(isUser.length < 1)
+            return errResponse(baseResponse.USER_ERROR);//존재하지 않거나 탈퇴회원
+        else{
+            const profilePatch = await userDao.profilePatch(connection,profile,userId);
+            connection.release();
+            return response(baseResponse.SUCCESS);
+        }
+    } catch (err) {
+        logger.error(`App - profilePatch Service error\n: ${err.message}`);
         return errResponse(baseResponse.DB_ERROR);
     }
 }
