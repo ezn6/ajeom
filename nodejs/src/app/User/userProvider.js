@@ -72,3 +72,34 @@ exports.mypage = async function (userId) {//밸리:완성,쿼리로 구독상태
     //return response(baseResponse.SUCCESS,mypage);
   }
 };
+
+//내 이미지함
+exports.myimg = async function (userId,cursor) {//밸리:이미지status 쿼리에서 확인, OK!
+  const connection = await pool.getConnection(async (conn) => conn);
+  //밸리데이션:사용자가 존재하는 회원인지(status=1)
+  const isUser = await userDao.existUserAccount(connection,userId);
+  if(isUser.length < 1)
+    return errResponse(baseResponse.USER_ERROR);//존재하지 않거나 탈퇴회원
+
+  if(cursor==undefined){
+    const myimg = await userDao.myimg(connection, userId);
+    const myimgNext = await userDao.myimgNext(connection,userId, myimg[myimg.length - 1].cs);
+    if(myimgNext.length > 0){
+      connection.release();
+      return {'myimg':myimg, 'nextCs':myimg[myimg.length - 1].cs, 'hasMore':true};
+    } else{
+      connection.release();
+      return {'myimg':myimg, 'nextCs':myimg[myimg.length - 1].cs, 'hasMore':false};
+    }
+  } else{
+    const myimgNext = await userDao.myimgNext(connection,userId, cursor);
+    const myimgNext2 = await userDao.myimgNext(connection,userId, myimgNext[myimgNext.length - 1].cs);
+    if(myimgNext2.length > 0){
+      connection.release();
+      return {'myimg':myimgNext, 'nextCs':myimgNext[myimgNext.length - 1].cs, 'hasMore':true};
+    } else{
+      connection.release();
+      return {'myimg':myimgNext, 'nextCs':myimgNext[myimgNext.length - 1].cs, 'hasMore':false};
+    }
+  }
+};

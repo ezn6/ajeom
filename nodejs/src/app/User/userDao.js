@@ -148,6 +148,39 @@ async function findName(connection, nickname) {
   return Row[0];
 }
 
+//내 이미지함: 첫번째 limit 10
+async function myimg(connection, userId) {
+  const Query = `
+    select a.img, a.artId,
+           concat(lpad(DATE_FORMAT(m.createdAt,'%Y%m%d%H%i%S'),14,'0'),lpad(a.artId,3,'0')) as cs
+    from Myimg m,Artwork a
+    where m.userId = ? and m.artId=a.artId and m.status=1 and a.status=1
+    order by m.createdAt desc, a.artId desc limit 10;
+        `;
+  const Row = await connection.query(
+      Query,
+      userId
+  );
+  return Row[0];
+}
+
+//내 이미지함: 두번째 limit 10
+async function myimgNext(connection, userId,cursor) {
+  const Query = `
+    select a.img, a.artId,
+           concat(lpad(DATE_FORMAT(m.createdAt,'%Y%m%d%H%i%S'),14,'0'),lpad(a.artId,3,'0')) as cs
+    from Myimg m,Artwork a
+    where m.userId = ? and m.artId=a.artId and m.status=1 and a.status=1 and
+        concat(lpad(DATE_FORMAT(m.createdAt,'%Y%m%d%H%i%S'),14,'0'),lpad(a.artId,3,'0')) < ?
+    order by m.createdAt desc, a.artId desc limit 10;
+        `;
+  const Row = await connection.query(
+      Query,
+      [userId,cursor]
+  );
+  return Row[0];
+}
+
 
 
 
@@ -163,4 +196,5 @@ module.exports = {
   existUserAccount,
   profilePatch,
   findName,
+  myimg,myimgNext,
 };

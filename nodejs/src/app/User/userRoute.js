@@ -37,13 +37,8 @@ module.exports = function(app){
     //프로필 수정
     app.patch('/app/users/:userId/mypage/profile',jwtMiddleware, user.profilePatch);
 
-    //특정 유저 조회 API
-    //app.get('/app/users/:userId', user.getUserById);
-
-    // TODO: After 로그인 인증 방법 (JWT)
-    // 로그인 하기 API (JWT 생성)
-    //app.post('/app/login', user.login);
-
+    //내이미지함
+    app.get('/app/users/:userId/myimg',jwtMiddleware, user.myimg);
 
 
 

@@ -186,6 +186,23 @@ exports.profilePatch = async function (req, res) {
 
 };
 
+//내 이미지함
+exports.myimg = async function (req, res) {//밸리:ok
+
+    const userIdFromJWT = req.verifiedToken.userId
+    const userId = req.params.userId;
+    const cursor = req.query.cursor;//쿼리스트링-페이징
+
+    if (!userId)
+        return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
+    if (userIdFromJWT != userId)
+        return res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+
+    const myimg = await userProvider.myimg(userId,cursor);
+    return res.send(response(baseResponse.SUCCESS,myimg));
+
+};
+
 
 //아이디중복조회
 // exports.getUsers = async function (req, res) {
