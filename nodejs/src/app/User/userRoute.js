@@ -27,6 +27,8 @@ module.exports = function(app){
 
     //닉네임 수정
     app.patch('/app/users/:userId/mypage/nickname',jwtMiddleware, user.namePatch);
+    //닉네임 수정시 불러올 화면
+    app.get('/app/users/:userId/mypage/nickname',jwtMiddleware, user.getName);
 
     // 자동로그인 API (JWT 검증 및 Payload 내뱉기)/ JWT 검증 API
     app.get('/app/auto-login', jwtMiddleware, user.check);
@@ -36,9 +38,28 @@ module.exports = function(app){
 
     //프로필 수정
     app.patch('/app/users/:userId/mypage/profile',jwtMiddleware, user.profilePatch);
+    //프로필 수정시 불러올 화면
+    app.get('/app/users/:userId/mypage/profile',jwtMiddleware, user.getProfile);
 
     //내이미지함
     app.get('/app/users/:userId/myimg',jwtMiddleware, user.myimg);
+
+    //내보관함
+    app.get('/app/users/:userId/mystorage',jwtMiddleware, user.mystorage);
+
+    //내 작품리스트
+    app.get('/app/users/:userId/artworks',jwtMiddleware, user.myartworks);
+
+    //내가 저장한 옅보기
+    app.get('/app/users/:userId/savestorage',jwtMiddleware, user.mysave);
+
+    //작가한마디 수정(작성)
+    app.patch('/app/users/:userId/mypage/summary',jwtMiddleware, user.summaryPatch);
+    //작가한마디 수정시 불러올 화면
+    app.get('/app/users/:userId/mypage/summary',jwtMiddleware, user.getSummary);
+
+    //마이페이지>환경설정
+    app.get('/app/users/:userId/mypage/setting', jwtMiddleware, user.setting);
 
 
 

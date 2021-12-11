@@ -150,7 +150,21 @@ exports.namePatch = async function (req, res) {//밸리:OK
 
     const namePatch = await userService.namePatch(userId, nickname);
     return res.send(namePatch);
+};
 
+//닉네임 수정시 불러올 화면
+exports.getName = async function (req, res) {//밸리:OK
+
+    const userIdFromJWT = req.verifiedToken.userId
+    const userId = req.params.userId;
+
+    if (!userId)
+        return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
+    if (userIdFromJWT != userId)
+        return res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+
+    const getName = await userProvider.getName(userId);
+    return res.send(getName);
 };
 
 //마이페이지
@@ -171,7 +185,6 @@ exports.mypage = async function (req, res) {
 
 //프로필 수정
 exports.profilePatch = async function (req, res) {
-
     const userIdFromJWT = req.verifiedToken.userId
     const userId = req.params.userId;
     const {profile} = req.body;
@@ -183,7 +196,20 @@ exports.profilePatch = async function (req, res) {
 
     const profilePatch = await userService.profilePatch(userId,profile);
     return res.send(profilePatch);
+};
 
+//프로필 수정시 불러올 화면
+exports.getProfile = async function (req, res) {
+    const userIdFromJWT = req.verifiedToken.userId
+    const userId = req.params.userId;
+
+    if (!userId)
+        return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
+    if (userIdFromJWT != userId)
+        return res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+
+    const getProfile = await userProvider.getProfile(userId);
+    return res.send(getProfile);
 };
 
 //내 이미지함
@@ -199,8 +225,106 @@ exports.myimg = async function (req, res) {//밸리:ok
         return res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
 
     const myimg = await userProvider.myimg(userId,cursor);
-    return res.send(response(baseResponse.SUCCESS,myimg));
+    return res.send(myimg);
 
+};
+
+//내 보관함
+exports.mystorage = async function (req, res) {//밸리:ok
+
+    const userIdFromJWT = req.verifiedToken.userId
+    const userId = req.params.userId;
+    const cursor = req.query.cursor;//쿼리스트링-페이징
+
+    if (!userId)
+        return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
+    if (userIdFromJWT != userId)
+        return res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+
+    const mystorage = await userProvider.mystorage(userId,cursor);
+    return res.send(mystorage);
+};
+
+//내 작품리스트
+exports.myartworks = async function (req, res) {//밸리:ok
+
+    const userIdFromJWT = req.verifiedToken.userId
+    const userId = req.params.userId;
+    const cursor = req.query.cursor;//쿼리스트링-페이징
+
+    if (!userId)
+        return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
+    if (userIdFromJWT != userId)
+        return res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+
+    const myartworks = await userProvider.myartworks(userId,cursor);
+    return res.send(myartworks);
+};
+
+//내가 저장한 옅보기
+exports.mysave = async function (req, res) {//밸리:ok
+
+    const userIdFromJWT = req.verifiedToken.userId
+    const userId = req.params.userId;
+    const cursor = req.query.cursor;//쿼리스트링-페이징
+
+    if (!userId)
+        return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
+    if (userIdFromJWT != userId)
+        return res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+
+    const mysave = await userProvider.mysave(userId,cursor);
+    return res.send(mysave);
+};
+
+//작가한마디 수정
+exports.summaryPatch = async function (req, res) {//밸리:ok
+
+    const userIdFromJWT = req.verifiedToken.userId
+    const userId = req.params.userId;
+    const {summary} = req.body;
+
+    //밸리데이션:그냥 자기소개를 입력하지 않을수도 있다(지우기)
+    if (!userId)
+        return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
+    if (userIdFromJWT != userId)
+        return res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    // if (!summary)
+    //     return res.send(errResponse(baseResponse.SUMMARY_EMPTY));
+    if (summary.length > 45)
+        return res.send(errResponse(baseResponse.SUMMARY_LENGTH));//45자리 이하로
+
+    const summaryPatch = await userService.summaryPatch(userId, summary);
+    return res.send(summaryPatch);
+};
+
+//자기소개 작가한마디 수정시 불러올 화면
+exports.getSummary = async function (req, res) {//밸리:OK
+
+    const userIdFromJWT = req.verifiedToken.userId
+    const userId = req.params.userId;
+
+    if (!userId)
+        return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
+    if (userIdFromJWT != userId)
+        return res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+
+    const getSummary = await userProvider.getSummary(userId);
+    return res.send(getSummary);
+};
+
+//마이페이지>환경설정
+exports.setting = async function (req, res) {
+    const userIdFromJWT = req.verifiedToken.userId
+    const userId = req.params.userId;
+
+    if (!userId)
+        return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
+    if (userIdFromJWT != userId)
+        return res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+
+    const setting = await userProvider.setting(userId);
+    return res.send(setting);
 };
 
 
