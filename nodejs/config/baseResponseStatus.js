@@ -48,9 +48,10 @@ module.exports = {
     STORAGEID_EMPTY : { "isSuccess": false, "code": 2031, "message":"storageId를 입력해주세요." },
     SUMMARY_LENGTH : { "isSuccess": false, "code": 2032, "message":"소개는 45자리 이하로 입력해주세요." },
     MYIMGID_EMPTY : { "isSuccess": false, "code": 2033, "message":"myimgId를 입력해주세요." },
+    NUMBER_EMPTY : { "isSuccess": false, "code": 2034, "message":"신고사유를 선택해주세요." },
 
-    TITLE_EMPTY : { "isSuccess": false, "code": 2034, "message":"작품 제목을 입력해주세요." },
-    CAPTION_EMPTY : { "isSuccess": false, "code": 2035, "message":"작품 설명을 입력해주세요." },
+    TITLE_EMPTY : { "isSuccess": false, "code": 2034, "message":"제목을 입력해주세요." },
+    CAPTION_EMPTY : { "isSuccess": false, "code": 2035, "message":"설명을 입력해주세요." },
     ARTIMG_EMPTY : { "isSuccess": false, "code": 2036, "message":"작품 이미지를 등록해주세요." },
     PRICE_EMPTY : { "isSuccess": false, "code": 2037, "message":"작품 가격을 입력해주세요." },
     LINK_EMPTY : { "isSuccess": false, "code": 2038, "message":"링크를 입력해주세요." },
@@ -89,6 +90,7 @@ module.exports = {
     DEL_IMG_ERROR : { "isSuccess": false, "code": 3026, "message":"이미지함에 존재하지 않거나 삭제된 이미지 입니다." },
     WRONG_FIELDID : { "isSuccess": false, "code": 3027, "message":"잘못된 분야 선택입니다." },
     WRONG_KWID : { "isSuccess": false, "code": 3028, "message":"잘못된 키워드 선택입니다." },
+    REVIEW_ERROR : { "isSuccess": false, "code": 3029, "message":"존재하지 않거나 삭제된 후기 입니다." },
 
     //Connection, Transaction 등의 서버 오류
     DB_ERROR : { "isSuccess": false, "code": 4000, "message": "데이터 베이스 에러"},
