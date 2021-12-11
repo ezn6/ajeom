@@ -51,10 +51,52 @@ async function reportNumcount(connection,userId) {
     return Row[0];
 }
 
+//계정 신고하기
+async function userReport(connection,userId,artistId,number,caption) {
+    const Query = `
+        INSERT INTO ajeom.Report_user (userId,artistId, reportNum, caption, status, createdAt, updatedAt)
+        VALUES (?,?,?,?, DEFAULT, DEFAULT, DEFAULT);
+        `;
+    const Row = await connection.query(
+        Query,
+        [userId,artistId,number,caption]
+    );
+    return Row[0];
+}
+
+//작품 게시물 신고하기
+async function artReport(connection,userId,artId,number,caption) {
+    const Query = `
+        INSERT INTO ajeom.Report_art (userId,artId, reportNum, caption, status, createdAt, updatedAt)
+        VALUES (?,?,?,?, DEFAULT, DEFAULT, DEFAULT);
+        `;
+    const Row = await connection.query(
+        Query,
+        [userId,artId,number,caption]
+    );
+    return Row[0];
+}
+
+//신고할 유저찾기(게시물 신고할때 작가)
+async function findArtist(connection,artId) {
+    const Query = `
+        select userId
+        from Artwork
+        where artId=?;
+        `;
+    const Row = await connection.query(
+        Query,
+        artId
+    );
+    return Row[0];
+}
+
 
 module.exports = {
     isReview,
     reportReview,
-    findReport,
+    findReport,findArtist,
     reportNumcount,
+    userReport,
+    artReport,
 };
