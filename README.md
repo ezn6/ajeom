@@ -25,6 +25,9 @@
 - 트랜잭션
 ![아제옴플젝이미지](https://user-images.githubusercontent.com/68230951/194827450-fbc9ccd0-5e65-4868-8284-c7a4f0da2de5.png)
 
-### 기관
+#### 기관
 
 - 소프트스퀘어드 CMC CX 1기 (디자이너와 함께하는 앱 런칭 프로젝트 , 소프트스퀘어드 x SSAC)
+
+#### 기타
+- Server 학습 내용 정리한 노션  : https://confused-literature-6ba.notion.site/Server-b967fb49c89d4550812547c09b433021
