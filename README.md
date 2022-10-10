@@ -31,3 +31,4 @@
 
 #### 기타
 - Server 학습 내용 정리한 노션  : https://confused-literature-6ba.notion.site/Server-b967fb49c89d4550812547c09b433021
+- AWS 서버구축 및 환경설정의 과정을 정리한 글 : https://blog.naver.com/wgbtlcs/222501013513
