@@ -5,3 +5,4 @@ log/*
 .DS_Store
 s3.json
 secret.js
+database.js
